@@ -24,7 +24,7 @@ namespace Repository.Models
         public DateTime PublishDate { get; set; }
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd", ApplyFormatInEditMode = true)]
-        public DateTime EditDate { get; set; }
+        public DateTime? EditDate { get; set; }
         public virtual ICollection<UserImage> Images { get; set; }
         public string UserId { get; set; }
         public virtual ApplicationUser User { get; set; }

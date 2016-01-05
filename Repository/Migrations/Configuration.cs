@@ -10,6 +10,7 @@ namespace Repository.Migrations
     using System.IO;
     using System.Drawing;
     using System.Drawing.Imaging;
+    using System.Collections.Generic;
 
     internal sealed class Configuration : DbMigrationsConfiguration<ApplicationDbContext>
     {
@@ -22,13 +23,15 @@ namespace Repository.Migrations
         protected override void Seed(ApplicationDbContext context)
         {
             //For debug purpose
-            //if (System.Diagnostics.Debugger.IsAttached == false)
-            //    System.Diagnostics.Debugger.Launch();
+            if (System.Diagnostics.Debugger.IsAttached == false)
+                System.Diagnostics.Debugger.Launch();
 
             SeedRoles(context);
             SeedImages(context);
             SeedUsers(context);
             SeedNews(context);
+            SeedProjects(context);
+            SeedEvents(context);
         }
 
         private void SeedUsers(ApplicationDbContext context)
@@ -44,16 +47,16 @@ namespace Repository.Migrations
                 if (adminresult.Succeeded)
                     manager.AddToRole(user.Id, "Admin");
             }
-            if (!context.Users.Any(u => u.UserName.StartsWith("User")))
-            {
-                for (int i = 0; i < 10; i++)
-                {
-                    var user = new ApplicationUser { UserName = string.Format("User{0}@gmail.com", i.ToString()) };
-                    var adminResult = manager.Create(user, "1234Abc.");
-                    if (adminResult.Succeeded)
-                        manager.AddToRole(user.Id, "CurrentMember");
-                }
-            }
+            //if (!context.Users.Any(u => u.UserName.StartsWith("User")))
+            //{
+            //    for (int i = 0; i < 10; i++)
+            //    {
+            //        var user = new ApplicationUser { UserName = string.Format("User{0}@gmail.com", i.ToString()) };
+            //        var adminResult = manager.Create(user, "1234Abc.");
+            //        if (adminResult.Succeeded)
+            //            manager.AddToRole(user.Id, "CurrentMember");
+            //    }
+            //}
         }
 
         private void SeedRoles(ApplicationDbContext context)
@@ -123,12 +126,75 @@ namespace Repository.Migrations
 
         private void SeedNews(ApplicationDbContext context)
         {
+            var userId = context.Set<ApplicationUser>().Where(u => u.UserName == "Admin")
+                                                        .FirstOrDefault().Id;
 
+            var image = context.Set<UserImage>().FirstOrDefault();
+
+            var images = new HashSet<UserImage>();
+            images.Add(image);
+
+                var news = new News()
+                {
+                    Images = images,
+                    Content = "Przyk³adowa treœæ " ,
+                    PublishDate = DateTime.Now.AddDays(-1),
+                    Title = "Tytu³ ",
+                    UserId = userId,
+
+
+                };
+
+                context.News.Add(news);
+
+            context.SaveChanges();
         }
 
         private void SeedProjects(ApplicationDbContext context)
         {
+            var user = context.Set<ApplicationUser>().Where(u => u.UserName == "Admin").FirstOrDefault();
 
+            var image = context.Set<UserImage>().FirstOrDefault();
+
+            var images = new HashSet<UserImage>();
+            images.Add(image);
+
+            var users = new HashSet<ApplicationUser>();
+            users.Add(user);
+
+                var project = new Project()
+                {
+                    Images = images,
+                    Description = "Przyk³adowa treœæ ",
+                    Title = "Tytu³ " ,
+                    UserId = user.Id,
+                    Users = users
+
+                };
+
+                context.Project.Add(project);
+
+            context.SaveChanges();
+        }
+
+        private void SeedEvents(ApplicationDbContext context)
+        {
+            var user = context.Set<ApplicationUser>().Where(u => u.UserName == "Admin").FirstOrDefault();
+
+            var image = context.Set<UserImage>().FirstOrDefault();
+
+
+                var myEvent = new Event()
+                {
+                    Description = "Przyk³adowa treœæ " ,
+                    Location = "Miejsce " ,
+                    UserId = user.Id,
+                    Name = "Wydarzenie " ,
+                };
+
+                context.Event.Add(myEvent);
+
+            context.SaveChanges();
         }
 
         public byte[] ImageToByteArray(Image image)
