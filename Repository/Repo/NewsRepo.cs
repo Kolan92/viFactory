@@ -13,7 +13,7 @@ namespace Repository.Repo
 
         public IQueryable<Models.News> GetAll()
         {
-            throw new NotImplementedException();
+            return db.News.AsNoTracking();
         }
 
         public Models.News GetById(int id)

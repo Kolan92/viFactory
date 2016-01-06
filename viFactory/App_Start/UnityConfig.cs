@@ -1,6 +1,9 @@
 using System;
 using Microsoft.Practices.Unity;
 using Microsoft.Practices.Unity.Configuration;
+using viFactory.Controllers;
+using Repository.IRepo;
+using Repository.Repo;
 
 namespace viFactory.App_Start
 {
@@ -36,7 +39,7 @@ namespace viFactory.App_Start
             // container.LoadConfiguration();
 
             // TODO: Register your types here
-            // container.RegisterType<IProductRepository, ProductRepository>();
+            container.RegisterType<INewsRepo, NewsRepo>(new PerRequestLifetimeManager());
         }
     }
 }
