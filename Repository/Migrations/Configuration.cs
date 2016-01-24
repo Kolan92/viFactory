@@ -1,3 +1,6 @@
+using System.Data.Entity.Core.Metadata.Edm;
+using System.Data.Entity.Infrastructure;
+
 namespace Repository.Migrations
 {
     using System;
@@ -25,7 +28,7 @@ namespace Repository.Migrations
             //For debug purpose
             if (System.Diagnostics.Debugger.IsAttached == false)
                 System.Diagnostics.Debugger.Launch();
-
+            //ClearDatabase(context);
             SeedRoles(context);
             SeedImages(context);
             SeedUsers(context);
@@ -34,6 +37,17 @@ namespace Repository.Migrations
             SeedEvents(context);
         }
 
+
+        public static void ClearDatabase(ApplicationDbContext context)
+        {
+            var tableNames = context.Database.SqlQuery<string>("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME NOT LIKE '%Migration%'").ToList();
+            foreach (var tableName in tableNames)
+            {
+                context.Database.ExecuteSqlCommand(string.Format("DELETE FROM {0}", tableName));
+            }
+
+            context.SaveChanges();
+        }
         private void SeedUsers(ApplicationDbContext context)
         {
             var store = new UserStore<ApplicationUser>(context);
@@ -64,32 +78,27 @@ namespace Repository.Migrations
             var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>());
             if (!roleManager.RoleExists("Admin"))
             {
-                var role = new IdentityRole();
-                role.Name = "Admin";
+                var role = new IdentityRole {Name = "Admin"};
                 roleManager.Create(role);
             }
             if (!roleManager.RoleExists("CurrentMember"))
             {
-                var role = new IdentityRole();
-                role.Name = "CurrentMember";
+                var role = new IdentityRole {Name = "CurrentMember"};
                 roleManager.Create(role);
             }
             if (!roleManager.RoleExists("FormerMember"))
             {
-                var role = new IdentityRole();
-                role.Name = "FormerMember";
+                var role = new IdentityRole {Name = "FormerMember"};
                 roleManager.Create(role);
             }
             if (!roleManager.RoleExists("ScientificSupervisor"))
             {
-                var role = new IdentityRole();
-                role.Name = "ScientificSupervisor";
+                var role = new IdentityRole {Name = "ScientificSupervisor"};
                 roleManager.Create(role);
             }
             if (!roleManager.RoleExists("Partner"))
             {
-                var role = new IdentityRole();
-                role.Name = "Partner";
+                var role = new IdentityRole {Name = "Partner"};
                 roleManager.Create(role);
             }
         }
@@ -129,24 +138,25 @@ namespace Repository.Migrations
             var userId = context.Set<ApplicationUser>().Where(u => u.UserName == "Admin")
                                                         .FirstOrDefault().Id;
 
-            var image = context.Set<UserImage>().FirstOrDefault();
+            var userImages = context.Set<UserImage>().AsQueryable();
+            var index = 0;
+            foreach (var image in userImages)
+            {
 
-            var images = new HashSet<UserImage>();
-            images.Add(image);
+                var images = new HashSet<UserImage>();
+                images.Add(image);
 
                 var news = new News()
                 {
                     Images = images,
-                    Content = "Przyk³adowa treœæ " ,
+                    Content = "Przyk³adowa treœæ " + index.ToString() + Repository.Models.Constants.loremIpsum,
                     PublishDate = DateTime.Now.AddDays(-1),
-                    Title = "Tytu³ ",
+                    Title = "Tytu³ " + index.ToString(),
                     UserId = userId,
-
-
                 };
-
+                index++;
                 context.News.Add(news);
-
+            }
             context.SaveChanges();
         }
 

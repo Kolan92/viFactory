@@ -4,6 +4,9 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Repository.IRepo;
+using Repository;
+using Repository.Models;
+using PagedList;
 
 namespace viFactory.Controllers
 {
@@ -15,9 +18,20 @@ namespace viFactory.Controllers
             _newsRepo = newsRepo;
         }
 
-        public ActionResult Index()
+        public ActionResult Index(int? page)
         {
-            var news = _newsRepo.GetAll();
+            var currentPage = page ?? 1;
+            var news = _newsRepo.GetAll().OrderByDescending(x => x.PublishDate);
+
+            var model = new PagedList<News>(news, currentPage, Constants.NewsPerPage);
+            return View(model);
+        }
+
+        public ActionResult Details(int? id)
+        {
+            if (id == null) return HttpNotFound();
+
+            var news = _newsRepo.GetById((int) id);
             return View(news);
         }
 

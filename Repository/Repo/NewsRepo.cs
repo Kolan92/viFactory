@@ -16,19 +16,28 @@ namespace Repository.Repo
             return db.News.AsNoTracking();
         }
 
-        public Models.News GetById(int id)
+        public IQueryable<News> GetNewsPage(int? page, int? newsCount)
+        {
+            var news = db.News.OrderByDescending(x => x.PublishDate)
+                .Skip((page.Value - 1)*newsCount.Value)
+                .Take(newsCount.Value);
+
+            return news;
+        }
+        
+        public News GetById(int id)
+        {
+            return db.News.FirstOrDefault(x => x.Id == id);
+        }
+
+        public void Add(News news)
         {
             throw new NotImplementedException();
         }
 
-        public void Add(Models.News news)
+        public void Update(News news)
         {
             throw new NotImplementedException();
-        }
-
-        public void Update(Models.News news)
-        {
-            throw new NotImplementedException();
-        }
+        }   
     }
 }
