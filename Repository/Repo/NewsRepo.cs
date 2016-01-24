@@ -11,7 +11,7 @@ namespace Repository.Repo
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        public IQueryable<Models.News> GetAll()
+        public IQueryable<News> GetAll()
         {
             return db.News.AsNoTracking();
         }

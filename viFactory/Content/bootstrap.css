@@ -4275,11 +4275,19 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   border-width: 1px 0 0;
 }
 .navbar-brand {
-  float: left;
+    background-image: url('../../Resources/logo.png');
+    background-size: cover;
+    background-position: center center;
+    background-repeat:no-repeat;
+     display: block;
+     width: 150px;
+     height: 150px;
+     text-indent: -9999px; 
+  /*float: left;
   height: 50px;
   padding: 15px 15px;
   font-size: 18px;
-  line-height: 20px;
+  line-height: 20px;*/
 }
 .navbar-brand:hover,
 .navbar-brand:focus {

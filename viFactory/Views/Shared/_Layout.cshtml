@@ -17,7 +17,11 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @*<a href="#" class="pull-left"><img src='../../Resources/logo.png'></a>*@
+                <a href='@Url.Action("Index", "Home")'>
+                    <img src='@Url.Content("../../Resources/logo.png")' style="height: 50px"/>
+                </a>
+                @*@Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })*@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">

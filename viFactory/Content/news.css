@@ -1,5 +1,5 @@
 ﻿.newsImage {
-
+    overflow: hidden;
 }
 
 .newsImage > img {
@@ -8,6 +8,15 @@
     max-width: 100%;
     /*width: 100px;*/
     height: auto;
+-webkit-transform: scale(1);
+	transform: scale(1);
+	-webkit-transition: .3s ease-in-out;
+	transition: .3s ease-in-out;
+}
+
+.newsImage > img:hover {
+ -webkit-transform: scale(1.3);
+	transform: scale(1.3);
 }
 
 .news {
@@ -42,12 +51,16 @@
     float: right;
     /*background-color: rgba(0, 0, 0, 0.7);*/
 }
+.shrink {
+    
+}
 
 .logo {
     background-size: 100%;
     background-size: cover;
     background-position: center center;
-    vertical-align: top;
-    background-image: url('../../Resources/logo.jpg');
     background-repeat:no-repeat;
+    vertical-align: top;
+    background-image: url('../../Resources/logo.png');
+    
 }  
