@@ -26,8 +26,8 @@ namespace Repository.Migrations
         protected override void Seed(ApplicationDbContext context)
         {
             //For debug purpose
-            if (System.Diagnostics.Debugger.IsAttached == false)
-                System.Diagnostics.Debugger.Launch();
+            //if (System.Diagnostics.Debugger.IsAttached == false)
+            //    System.Diagnostics.Debugger.Launch();
             //ClearDatabase(context);
             SeedRoles(context);
             SeedImages(context);
@@ -52,6 +52,7 @@ namespace Repository.Migrations
         {
             var store = new UserStore<ApplicationUser>(context);
             var manager = new UserManager<ApplicationUser>(store);
+            var userImages = context.Set<UserImage>().ToList();
 
             if (!context.Users.Any(u => u.UserName == "Admin"))
             {
@@ -60,45 +61,68 @@ namespace Repository.Migrations
 
                 if (adminresult.Succeeded)
                     manager.AddToRole(user.Id, "Admin");
+
+                user = new ApplicationUser
+                {
+                    UserName = "Extensa",
+                    Url = "www.extensa.pl",
+                    FirstName = "Extensa",
+                    Avatar = userImages.Last()
+                };
+                adminresult = manager.Create(user, "1234Abc.");
+
+                if (adminresult.Succeeded)
+                    manager.AddToRole(user.Id, "Admin");
             }
-            //if (!context.Users.Any(u => u.UserName.StartsWith("User")))
-            //{
-            //    for (int i = 0; i < 10; i++)
-            //    {
-            //        var user = new ApplicationUser { UserName = string.Format("User{0}@gmail.com", i.ToString()) };
-            //        var adminResult = manager.Create(user, "1234Abc.");
-            //        if (adminResult.Succeeded)
-            //            manager.AddToRole(user.Id, "CurrentMember");
-            //    }
-            //}
+            if (!context.Users.Any(u => u.UserName.StartsWith("CurrentMember")))
+            {
+                for (var i = 0; i < 10; i++)
+                {
+                    var user = new ApplicationUser
+                    {
+                        UserName = string.Format("User{0}@gmail.com", i.ToString()),
+                        Url = "www.extensa.pl" + i,
+                        FirstName = "Extensa" + i,
+                    };
+                    var adminResult = manager.Create(user, "1234Abc.");
+                    if (adminResult.Succeeded)
+                        manager.AddToRole(user.Id, "CurrentMember");
+                }
+            }
         }
 
         private void SeedRoles(ApplicationDbContext context)
         {
-            var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>());
+            var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
+            
             if (!roleManager.RoleExists("Admin"))
             {
-                var role = new IdentityRole {Name = "Admin"};
+                var role = new IdentityRole();
+                role.Name = "Admin";
                 roleManager.Create(role);
             }
             if (!roleManager.RoleExists("CurrentMember"))
             {
-                var role = new IdentityRole {Name = "CurrentMember"};
+                var role = new IdentityRole();
+                role.Name = "CurrentMember";
                 roleManager.Create(role);
             }
             if (!roleManager.RoleExists("FormerMember"))
             {
-                var role = new IdentityRole {Name = "FormerMember"};
+                var role = new IdentityRole();
+                role.Name = "FormerMember";
                 roleManager.Create(role);
             }
             if (!roleManager.RoleExists("ScientificSupervisor"))
             {
-                var role = new IdentityRole {Name = "ScientificSupervisor"};
+                var role = new IdentityRole();
+                role.Name = "ScientificSupervisor";
                 roleManager.Create(role);
             }
             if (!roleManager.RoleExists("Partner"))
             {
-                var role = new IdentityRole {Name = "Partner"};
+                var role = new IdentityRole();
+                role.Name = "Partner";
                 roleManager.Create(role);
             }
         }

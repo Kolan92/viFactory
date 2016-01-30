@@ -61,6 +61,15 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Nasi partnerzy:.
+        /// </summary>
+        internal static string OurPartners {
+            get {
+                return ResourceManager.GetString("OurPartners", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Strona.
         /// </summary>
         internal static string Page {

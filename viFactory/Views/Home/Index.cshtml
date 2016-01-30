@@ -1,6 +1,6 @@
 ﻿@using PagedList.Mvc;
 @using viFactory.Helpers
-@model PagedList.IPagedList<Repository.Models.News>
+@model Repository.Models.NewsUsersViewModel
 
 
 @{
@@ -13,10 +13,12 @@
     
 </div>*@
 <div class="row">
-    <div class="col-md-3">.col-md-3</div>
+    <div class="col-md-3">
+        @Html.Partial("_Partners", Model.PartnerUser)
+    </div>
     <div class="col-md-6">
        
-            @foreach (var item in Model)
+            @foreach (var item in Model.NewsPagedList)
             {
                 <div class="row">
                     <div class="news">
@@ -50,9 +52,9 @@
             }
         <div>
             @Resources.Resource.Page
-            @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)
-            @Resources.Resource.PageFrrom @Model.PageCount
-            @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+            @(Model.NewsPagedList.PageCount < Model.NewsPagedList.PageNumber ? 0 : Model.NewsPagedList.PageNumber)
+            @Resources.Resource.PageFrrom @Model.NewsPagedList.PageCount
+            @Html.PagedListPager(Model.NewsPagedList, page => Url.Action("Index", new { page }))
         </div>
     </div>
     <div class="col-md-3">.col-md-3</div>

@@ -13,17 +13,24 @@ namespace viFactory.Controllers
     public class HomeController : Controller
     {
         private INewsRepo _newsRepo;
-        public HomeController(INewsRepo newsRepo)
+        private IUserRepo _userRepo;
+        
+        public HomeController(INewsRepo newsRepo, IUserRepo userRepo)
         {
             _newsRepo = newsRepo;
+            _userRepo = userRepo;
         }
 
         public ActionResult Index(int? page)
         {
             var currentPage = page ?? 1;
             var news = _newsRepo.GetAll().OrderByDescending(x => x.PublishDate);
-
-            var model = new PagedList<News>(news, currentPage, Constants.NewsPerPage);
+            var users = _userRepo.GetAllUsers();
+            var model = new NewsUsersViewModel()
+            {
+                NewsPagedList = new PagedList<News>(news, currentPage, Constants.NewsPerPage),
+                PartnerUser = users
+            };  //new PagedList<News>(news, currentPage, Constants.NewsPerPage);
             return View(model);
         }
 

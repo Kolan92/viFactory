@@ -40,6 +40,7 @@ namespace viFactory.App_Start
 
             // TODO: Register your types here
             container.RegisterType<INewsRepo, NewsRepo>(new PerRequestLifetimeManager());
+            container.RegisterType<IUserRepo, UserRepo>(new PerRequestLifetimeManager());
         }
     }
 }
